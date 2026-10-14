@@ -3,10 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "license": "UNLICENSED",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ."
+  },
   "dependencies": {
-    "preact": "^10.10.x",
-    "preact-iso": "^2.9.1",
     "@preact/signals": "^2.3.x",
-    "@shopify/ui-extensions": "rc"
+    "@shopify/ui-extensions": "rc",
+    "eligibility": "workspace:*",
+    "preact": "^10.10.x",
+    "preact-iso": "^2.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
   }
 }
