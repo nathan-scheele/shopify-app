@@ -36,6 +36,25 @@ importers:
         specifier: ~2025.10.12
         version: 2025.10.16(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)
 
+  extensions/customer-eligibility-block:
+    dependencies:
+      '@preact/signals':
+        specifier: ^2.3.x
+        version: 2.11.3(preact@10.29.8)
+      '@shopify/ui-extensions':
+        specifier: 2026.7.x
+        version: 2026.7.0(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)
+      eligibility:
+        specifier: workspace:*
+        version: link:../../packages/eligibility
+      preact:
+        specifier: ^10.10.x
+        version: 10.29.8(preact-render-to-string@6.8.0)
+    devDependencies:
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
   packages/eligibility:
     devDependencies:
       typescript:
@@ -192,6 +211,17 @@ packages:
 
   '@shopify/ui-extensions@2026.10.0-rc.13':
     resolution: {integrity: sha512-zzdsKv8umqm4Hf3zaGXhrFwbPY/gbyjHdBtU6LCvUeoENmarnXsRqlJHSv7Ze+VbnhDRcRvZkAI5YMGFTZYISQ==}
+    peerDependencies:
+      '@preact/signals': '*'
+      preact: '*'
+    peerDependenciesMeta:
+      '@preact/signals':
+        optional: true
+      preact:
+        optional: true
+
+  '@shopify/ui-extensions@2026.7.0':
+    resolution: {integrity: sha512-xqcExD7d5yAmTZMd+W8yB5sfB587UKobY/fPeONImZLITsEPRbUYfH9MPUHoGJ3uL+5oBYy9ZMZofysQ3vP7eQ==}
     peerDependencies:
       '@preact/signals': '*'
       preact: '*'
@@ -780,6 +810,13 @@ snapshots:
       preact: 10.29.8(preact-render-to-string@6.8.0)
 
   '@shopify/ui-extensions@2026.10.0-rc.13(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)':
+    dependencies:
+      ts-morph: 25.0.1
+    optionalDependencies:
+      '@preact/signals': 2.11.3(preact@10.29.8)
+      preact: 10.29.8(preact-render-to-string@6.8.0)
+
+  '@shopify/ui-extensions@2026.7.0(@preact/signals@2.11.3(preact@10.29.8))(preact@10.29.8)':
     dependencies:
       ts-morph: 25.0.1
     optionalDependencies:
