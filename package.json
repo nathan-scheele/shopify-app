@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "UNLICENSED",
   "workspaces": [
-    "extensions/*"
+    "extensions/*",
+    "packages/*"
   ],
   "scripts": {
     "shopify": "shopify",
@@ -11,7 +12,9 @@
     "dev": "shopify app dev",
     "info": "shopify app info",
     "generate": "shopify app generate",
-    "deploy": "shopify app deploy"
+    "deploy": "shopify app deploy",
+    "test": "pnpm --filter eligibility test",
+    "typecheck": "pnpm -r typecheck"
   },
   "dependencies": {},
   "trustedDependencies": [
