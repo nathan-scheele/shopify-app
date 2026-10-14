@@ -14,13 +14,37 @@ import {
 const adminGraphql = directAdminGraphql();
 const HEADING = 'Discount eligibility';
 
+const APP_URL_QUERY = `#graphql
+  query CustomerEligibilityAppUrl {
+    shop { myshopifyDomain }
+    currentAppInstallation { app { handle } }
+  }
+`;
+
+/**
+ * The App Home customer page as a full admin URL, so "View all" can open it in
+ * a new tab. The admin opens `app:` links in the current tab whatever their
+ * `target`, so this falls back to one only if the lookup fails.
+ * @param {string} customerId A Customer GID.
+ */
+async function appCustomerUrl(customerId) {
+  const path = `customers/${customerId.split('/').pop()}`;
+  try {
+    const {shop, currentAppInstallation} = await adminGraphql(APP_URL_QUERY);
+    const store = shop.myshopifyDomain.replace('.myshopify.com', '');
+    return `https://admin.shopify.com/store/${store}/apps/${currentAppInstallation.app.handle}/${path}`;
+  } catch {
+    return `app:${path}`;
+  }
+}
+
 export default async () => {
   render(<Extension />, document.body);
 };
 
 /**
  * @typedef {{status: 'loading'}
- *   | {status: 'loaded', eligibility: CustomerEligibility}
+ *   | {status: 'loaded', eligibility: CustomerEligibility, viewAllUrl: string}
  *   | {status: 'error', message: string}} BlockState
  */
 
@@ -32,8 +56,13 @@ function Extension() {
   );
 
   useEffect(() => {
-    getCustomerEligibility(customerId, adminGraphql)
-      .then((eligibility) => setState({status: 'loaded', eligibility}))
+    Promise.all([
+      getCustomerEligibility(customerId, adminGraphql),
+      appCustomerUrl(customerId),
+    ])
+      .then(([eligibility, viewAllUrl]) =>
+        setState({status: 'loaded', eligibility, viewAllUrl}),
+      )
       .catch((error) =>
         setState({status: 'error', message: eligibilityErrorMessage(error)}),
       );
@@ -85,7 +114,7 @@ function Extension() {
             </s-text>
           ))}
         </s-stack>
-        <s-link href={`app:customers/${customerId.split('/').pop()}`}>
+        <s-link href={state.viewAllUrl} target="_blank">
           View all
         </s-link>
       </s-stack>
