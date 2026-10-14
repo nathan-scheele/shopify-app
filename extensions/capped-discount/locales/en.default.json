@@ -1,0 +1,4 @@
+{
+  "name": "Capped Discount",
+  "description": "A percentage off the order subtotal, never more than the Cap"
+}

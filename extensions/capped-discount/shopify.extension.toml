@@ -1,0 +1,17 @@
+api_version = "2026-10"
+
+[[extensions]]
+name = "t:name"
+handle = "capped-discount"
+type = "function"
+uid = "27499398-0c38-2bb1-2165-803069b6fcc9c8c55aeb"
+description = "t:description"
+
+  [[extensions.targeting]]
+  target = "cart.lines.discounts.generate.run"
+  input_query = "src/cart_lines_discounts_generate_run.graphql"
+  export = "cart-lines-discounts-generate-run"
+
+  [extensions.build]
+  command = ""
+  path = "dist/function.wasm"
