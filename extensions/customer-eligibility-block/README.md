@@ -4,9 +4,9 @@ An admin block on Shopify's Customer details page (`admin.customer-details.block
 
 It works the eligibility out with the shared `eligibility` package over direct Admin API access, like App Home, and uses the package's `eligibility/format` helpers so both describe discounts and errors the same way. Merchants add the block to the customer page themselves: **Blocks → + Block → Discount eligibility**, then pin it to keep it on every customer page.
 
-## Known issue: "View all" opens App Home's first page
+## "View all" in the dev preview
 
-In the dev preview (`shopify app dev`) the admin rewrites every in-admin link into the app to `/admin/apps/<handle>`, dropping the path and query. "View all" therefore opens App Home at `/` instead of `/customers/:id`. The same happens with relative URLs, `shopify://admin/apps/<handle>/…` and `target="_blank"`, while loading `admin.shopify.com/store/<store>/apps/<handle>/customers/<id>` directly works. The link uses the documented `app:` form; check it again on a deployed app version.
+On a deployed version, "View all" opens App Home at `/customers/:id`. Under `shopify app dev`, the admin drops the path from in-admin links into the app, so the link opens App Home at `/` instead. To check the link, deploy, or open `admin.shopify.com/store/<store>/apps/<handle>/customers/<id>` directly.
 
 ## Bundle size
 
