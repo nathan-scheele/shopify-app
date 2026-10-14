@@ -40,8 +40,13 @@ export default function CustomerPage({id = ''}) {
     };
   }, [id]);
 
+  // An empty heading also hides the breadcrumb, so only use one while loading.
   const heading =
-    state.status === 'loaded' ? state.eligibility.customer.displayName : '';
+    state.status === 'loaded'
+      ? state.eligibility.customer.displayName
+      : state.status === 'error'
+        ? 'Customer'
+        : '';
 
   return (
     <s-page heading={heading}>
