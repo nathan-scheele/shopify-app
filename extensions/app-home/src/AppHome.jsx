@@ -12,6 +12,10 @@ export default async () => {
 function App() {
   return (
     <LocationProvider>
+      {/* The app name in the sidebar also links to `/`; this link names the page. */}
+      <s-app-nav>
+        <s-link href="/">Customers</s-link>
+      </s-app-nav>
       <ErrorBoundary>
         <Router>
           <Route path="/" component={HomePage} />
