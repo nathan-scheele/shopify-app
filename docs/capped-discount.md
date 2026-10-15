@@ -88,11 +88,11 @@ The Cap applies only to the Capped Discount's own amount. Shopify applies any co
 - `20% off, up to 46.17 EUR`: a USD 50 Cap at rate 0.92359
 - `20% off, up to 7561 JPY`
 
-The message shows the converted Cap in the shopper's currency, because that is the amount that actually limits their discount. It uses the ISO code because Functions run without `Intl`, so currency symbols would need a hand-written table, and `$` alone is ambiguous. For code discounts, Shopify shows the code in the cart instead of this message.
+The message shows the converted Cap in the shopper's currency, because that is the amount that actually limits their discount. It uses the ISO code because Functions run without `Intl`, so currency symbols would need a hand-written table, and `$` alone is ambiguous. Checkout shows it in capitals ("10% OFF, UP TO 25 USD"). For code discounts, Shopify shows the code instead of this message.
 
 ## Creating a Capped Discount through the Admin API
 
-Use this until the settings extension (#4) lands. Run it as this app, e.g. in the GraphiQL that `shopify app dev` opens (press `g`), against `very-best-dev-store`. Both mutations need `write_discounts`. `functionHandle` is the extension handle from `extensions/capped-discount/shopify.extension.toml`.
+Use this until the settings extension (#4) lands. Run it as this app against `very-best-dev-store`: save the mutation to a file, then run `shopify app execute --store very-best-dev-store.myshopify.com --version 2026-10 --query-file <file>`. The GraphiQL that `shopify app dev` opens (press `g`) also works. Both mutations need `write_discounts`. `functionHandle` is the extension handle from `extensions/capped-discount/shopify.extension.toml`.
 
 Code discount:
 
@@ -104,7 +104,7 @@ mutation {
       code: "CAPPED20"
       functionHandle: "capped-discount"
       discountClasses: [ORDER]
-      startsAt: "2026-10-13T00:00:00-04:00"
+      startsAt: "2026-10-14T00:00:00-04:00"
       combinesWith: { orderDiscounts: false, productDiscounts: true, shippingDiscounts: true }
       metafields: [
         {
@@ -128,17 +128,17 @@ Automatic discount:
 mutation {
   discountAutomaticAppCreate(
     automaticAppDiscount: {
-      title: "Capped 20% (automatic)"
+      title: "Capped 10% up to $25 (automatic)"
       functionHandle: "capped-discount"
       discountClasses: [ORDER]
-      startsAt: "2026-10-13T00:00:00-04:00"
+      startsAt: "2026-10-14T00:00:00-04:00"
       combinesWith: { orderDiscounts: false, productDiscounts: true, shippingDiscounts: true }
       metafields: [
         {
           namespace: "$app"
           key: "function-configuration"
           type: "json"
-          value: "{\"percentage\":20,\"cap\":50}"
+          value: "{\"percentage\":10,\"cap\":25}"
         }
       ]
     }
@@ -149,7 +149,16 @@ mutation {
 }
 ```
 
-The dev store's timezone is America/New_York, hence the `-04:00` offset.
+The dev store's timezone is America/New_York, hence the `-04:00` offset. The automatic discount uses a different config from the code discount so the two are easy to tell apart. They don't combine with each other (`orderDiscounts: false`), so when both apply, Shopify keeps the larger one.
+
+### Checked at checkout (2026-10-14, app version very-best-app-5)
+
+| Discount | Cart | Shown at checkout |
+|---|---|---|
+| `CAPPED20` (20%, Cap $50) | Ski Wax $24.95 | Order discount CAPPED20 − $4.99 |
+| `CAPPED20` | Complete Snowboard $699.95 | Order discount CAPPED20 − $50.00 |
+| Automatic (10%, Cap $25) | Ski Wax $49.95 | 10% OFF, UP TO 25 USD − $5.00 (4.995 rounded half-up) |
+| Automatic | Complete Snowboard $699.95 | 10% OFF, UP TO 25 USD − $25.00 |
 
 ## Tests
 
