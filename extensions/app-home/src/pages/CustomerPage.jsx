@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'preact/hooks';
+import {directAdminGraphql, getCustomerEligibility} from 'eligibility';
 import {
-  AdminGraphqlError,
-  CustomerNotFoundError,
-  directAdminGraphql,
-  getCustomerEligibility,
-} from 'eligibility';
+  codeSummaryText,
+  eligibilityErrorMessage,
+  formatDate,
+} from 'eligibility/format';
 
 /** @typedef {import('eligibility').CustomerEligibility} CustomerEligibility */
 /** @typedef {import('eligibility').EligibleDiscount} EligibleDiscount */
@@ -32,7 +32,9 @@ export default function CustomerPage({id = ''}) {
         if (!cancelled) setState({status: 'loaded', eligibility});
       })
       .catch((error) => {
-        if (!cancelled) setState({status: 'error', message: errorMessage(error)});
+        if (!cancelled) {
+          setState({status: 'error', message: eligibilityErrorMessage(error)});
+        }
       })
       .finally(() => shopify.loading(false));
     return () => {
@@ -150,24 +152,11 @@ function DiscountTable({discounts}) {
 }
 
 /** @param {{discount: EligibleDiscount}} props */
-function CodeCell({discount: {method, codeSummary}}) {
-  if (method === 'automatic' || !codeSummary) return <s-badge>Automatic</s-badge>;
-  if (codeSummary.kind === 'single') return <s-text>{codeSummary.code}</s-text>;
-  return <s-text>{codeSummary.count.toLocaleString()} codes</s-text>;
-}
-
-/** @param {string} date */
-function formatDate(date) {
-  return new Date(date).toLocaleDateString(undefined, {dateStyle: 'medium'});
-}
-
-/** @param {unknown} error */
-function errorMessage(error) {
-  if (error instanceof CustomerNotFoundError) {
-    return 'This customer doesn’t exist or was deleted.';
-  }
-  if (error instanceof AdminGraphqlError && error.code === 'ACCESS_DENIED') {
-    return 'You don’t have permission to view this customer’s discounts. Ask the store owner for access to customers, discounts and orders.';
-  }
-  return 'Something went wrong while loading discounts. Reload the page to try again.';
+function CodeCell({discount}) {
+  const text = codeSummaryText(discount);
+  return discount.codeSummary ? (
+    <s-text>{text}</s-text>
+  ) : (
+    <s-badge>{text}</s-badge>
+  );
 }
