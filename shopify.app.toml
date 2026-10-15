@@ -6,7 +6,6 @@ application_url = "https://shopify.dev/apps/default-app-home"
 embedded = true
 
 [build]
-include_config_on_deploy = true
 automatically_update_urls_on_dev = true
 
 [webhooks]
@@ -47,6 +46,14 @@ type = "metaobject_reference<$app:faq>"
 
   [product.metafields.app.faq.access]
   admin = "merchant_read_write"
+
+# Capped Discount config: { "percentage": number, "cap": number }.
+# Contract for the Function, settings, seed and eligibility view: docs/capped-discount.md
+[discount.metafields.app.function-configuration]
+name = "Capped Discount configuration"
+description = "Percentage off the order subtotal and the Cap in shop currency"
+type = "json"
+access.admin = "merchant_read"
 
 [sidekick]
 extensions_summary = "Read FAQ entries stored in the app"

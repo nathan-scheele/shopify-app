@@ -13,7 +13,7 @@
     "info": "shopify app info",
     "generate": "shopify app generate",
     "deploy": "shopify app deploy",
-    "test": "pnpm --filter eligibility test",
+    "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
   },
   "dependencies": {},

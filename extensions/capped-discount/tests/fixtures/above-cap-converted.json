@@ -1,0 +1,34 @@
+{
+  "payload": {
+    "export": "cart-lines-discounts-generate-run",
+    "target": "cart.lines.discounts.generate.run",
+    "input": {
+      "cart": {
+        "cost": {
+          "subtotalAmount": { "amount": "1000.0", "currencyCode": "EUR" }
+        }
+      },
+      "discount": {
+        "discountClasses": ["ORDER"],
+        "metafield": { "jsonValue": { "percentage": 20, "cap": 50 } }
+      },
+      "presentmentCurrencyRate": "0.92359"
+    },
+    "output": {
+      "operations": [
+        {
+          "orderDiscountsAdd": {
+            "candidates": [
+              {
+                "message": "20% off, up to 46.17 EUR",
+                "targets": [{ "orderSubtotal": { "excludedCartLineIds": [] } }],
+                "value": { "fixedAmount": { "amount": "46.17" } }
+              }
+            ],
+            "selectionStrategy": "FIRST"
+          }
+        }
+      ]
+    }
+  }
+}
